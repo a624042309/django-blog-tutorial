@@ -41,6 +41,9 @@ class Post(models.Model):
     # 作者
     author = models.ForeignKey(User)
 
+    # 阅读量 PositiveIntegerField只允许值为正整数或0
+    views = models.PositiveIntegerField(default=0)
+
     def __str__(self):
         return self.title
 
@@ -51,6 +54,11 @@ class Post(models.Model):
         # 把文章的id(数据库中的pk) 作为详情页面的绝对地址 
         # http://127.0.0.1:8000/post/255/      /post/detail/
         return reverse('blog:detail', kwargs={'pk': self.pk})
+
+    # 增加阅读量
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
 
     # 指定排序属性
     class Meta:

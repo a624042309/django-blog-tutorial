@@ -21,6 +21,9 @@ def detail(request, pk):
 	# 当传入的pk对应的Post在数据库存在时，返回对应的post; 不存在，返回404错误
 	post = get_object_or_404(Post, pk=pk)
 
+	# 阅读量 +1
+	post.increase_views()
+
 	# markdown
 	post.body = markdown.markdown(post.body, extensions=['markdown.extensions.extra', 
 														'markdown.extensions.codehilite', 
