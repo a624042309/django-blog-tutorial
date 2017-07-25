@@ -4,15 +4,20 @@ from django.http import HttpResponse
 from comments.forms import CommentForm
 from blog.models import Post, Category
 
+from django.views.generic import ListView
 import markdown
 
-# Create your views here.
+
 # 主页
-def index(request):
+# def index(request):
 
-	post_list = Post.objects.all()
-	return render(request, 'blog/index.html', context={'post_list': post_list})
+# 	post_list = Post.objects.all()
+# 	return render(request, 'blog/index.html', context={'post_list': post_list})
 
+class IndexView(ListView):
+	model = Post
+	template_name = 'blog/index.html'
+	context_object_name = 'post_list'
 
 # 文章详情
 # 参数pk用于接收文章id(对应models.Post下的get_absolute_url方法) 并作为url使用
