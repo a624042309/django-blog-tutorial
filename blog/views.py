@@ -34,7 +34,6 @@ class PostDetailView(DetailView):
         # 将文章阅读量 +1
         # 注意 self.object 的值就是被访问的文章 post
         self.object.increase_views()
-        print(self.object)
 
         # 视图必须返回一个 HttpResponse 对象
         return response
@@ -63,24 +62,28 @@ class PostDetailView(DetailView):
         return context
 
 # 归档的类视图
-class ArchivesView(IndexView):
+class ArchivesView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
 
-	def get_queryset(self):
-		year = self.kwargs.get('year')
-		month = self.kwargs.get('month')
-		return super(ArchivesView, self).get_queryset().filter( created_time__year=year, 
-																created_time__month=month
-																)
+    def get_queryset(self):
+        year = self.kwargs.get('year')
+        month = self.kwargs.get('month')
+        return super(ArchivesView, self).get_queryset().filter(created_time__year=year,
+                                                               created_time__month=month
+                                                               )
 
 
 # 分类的类视图
-class CategoryView(IndexView):
+class CategoryView(ListView):
+    model = Post
+    template_name = 'blog/index.html'
+    context_object_name = 'post_list'
 
     def get_queryset(self):
-
         cate = get_object_or_404(Category, pk=self.kwargs.get('pk'))
         return super(CategoryView, self).get_queryset().filter(category=cate)
-
 
 #############################################################################
 # 主页的视图函数
