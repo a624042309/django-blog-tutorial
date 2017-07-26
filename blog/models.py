@@ -85,3 +85,6 @@ class Post(models.Model):
     # 指定排序属性
     class Meta:
         ordering = ['-created_time']
+
+
+        
