@@ -26,7 +26,7 @@ SECRET_KEY = 'fjbi6@ope7#@d%nhu#@du_+c=qiu4i9y&!f7em9%7=#*w#lpr1'
 DEBUG = True
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.zxins.top']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.zxins.top', '.ngrok.io']
 
 
 # Application definition

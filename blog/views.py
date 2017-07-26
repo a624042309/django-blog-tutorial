@@ -15,34 +15,7 @@ class IndexView(ListView):
 	template_name = 'blog/index.html'
 	context_object_name = 'post_list'
 
-# 文章详情
-# 参数pk用于接收文章id(对应models.Post下的get_absolute_url方法) 并作为url使用
-def detail(request, pk):
 
-	# 当传入的pk对应的Post在数据库存在时，返回对应的post; 不存在，返回404错误
-	post = get_object_or_404(Post, pk=pk)
-
-	# 阅读量 +1
-	post.increase_views()
-
-	# markdown
-	post.body = markdown.markdown(post.body, extensions=['markdown.extensions.extra', 
-														'markdown.extensions.codehilite', 
-														'markdown.extensions.toc'
-														])
-
-	# 评论 表单
-	form = CommentForm()
-	# 获取当前 post 下的全部评论
-	comment_list = post.comment_set.all()
-
-	# 将文章、表单、评论列表 作为模板变量传给detail.html模板,以便渲染相应数据
-	context = {	'post': post,
-				'form': form,
-				'comment_list': comment_list,
-				}
-
-	return render(request, 'blog/detail.html', context=context)
 
 # 文章
 class PostDetailView(DetailView):
@@ -61,6 +34,7 @@ class PostDetailView(DetailView):
         # 将文章阅读量 +1
         # 注意 self.object 的值就是被访问的文章 post
         self.object.increase_views()
+        print(self.object)
 
         # 视图必须返回一个 HttpResponse 对象
         return response
@@ -110,26 +84,54 @@ class CategoryView(IndexView):
 
 #############################################################################
 # 主页的视图函数
-# def index(request):
+def index(request):
 
-# 	post_list = Post.objects.all()
-# 	return render(request, 'blog/index.html', context={'post_list': post_list})
+	post_list = Post.objects.all()
+	return render(request, 'blog/index.html', context={'post_list': post_list})
 
+# 文章详情
+# 参数pk用于接收文章id(对应models.Post下的get_absolute_url方法) 并作为url使用
+def detail(request, pk):
+
+	# 当传入的pk对应的Post在数据库存在时，返回对应的post; 不存在，返回404错误
+	post = get_object_or_404(Post, pk=pk)
+
+	# 阅读量 +1
+	post.increase_views()
+
+	# markdown
+	post.body = markdown.markdown(post.body, extensions=['markdown.extensions.extra', 
+														'markdown.extensions.codehilite', 
+														'markdown.extensions.toc'
+														])
+
+	# 评论 表单
+	form = CommentForm()
+	# 获取当前 post 下的全部评论
+	comment_list = post.comment_set.all()
+
+	# 将文章、表单、评论列表 作为模板变量传给detail.html模板,以便渲染相应数据
+	context = {	'post': post,
+				'form': form,
+				'comment_list': comment_list,
+				}
+
+	return render(request, 'blog/detail.html', context=context)
 
 # 归档的视图函数
-# def archives(request, year, month):
+def archives(request, year, month):
 	
-# 	post_list = Post.objects.filter(created_time__year=year, 
-# 									created_time__month=month
-# 									)
+	post_list = Post.objects.filter(created_time__year=year, 
+									created_time__month=month
+									)
 
-# 	return render(request, 'blog/index.html', context={'post_list': post_list})
+	return render(request, 'blog/index.html', context={'post_list': post_list})
 
 
 
 # 分类的视图函数
-# def category(request, pk):
+def category(request, pk):
 
-# 	cate = get_object_or_404(Category, pk=pk)
-# 	post_list = Post.objects.filter(category=cate)
-# 	return render(request, 'blog/index.html', context={'post_list': post_list})
+	cate = get_object_or_404(Category, pk=pk)
+	post_list = Post.objects.filter(category=cate)
+	return render(request, 'blog/index.html', context={'post_list': post_list})
